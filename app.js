@@ -84,6 +84,4 @@ submitButton.addEventListener("click", evt => {
     if (!validateEmail(userEmail.value)) setError(1, "Email is not valid");
     if (!validateCreatePassword(userCreatePassword.value)) setError(2, "Password must have atleast one number and special character");
     if (!validateConfirmPassword()) setError(3, "Password does not matching");
-
-    
 });
