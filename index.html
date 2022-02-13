@@ -14,23 +14,29 @@
     </head>
     <body>
         <main>
+            <div class="popUpForSuccessSubmit">
+                <p>Your Form is Successfully Submited</p>
+                <div class="closeDiv">
+                    <button class="closeBtn">Close</button>
+                </div>
+            </div>
             <form action="" class="formDiv">
                 <p id="headingSignUp">Sign up</p>
                 <div class="inputsAndButton">
                     <div class="inputWithError">
-                        <input type="text" name="userName" id="userName" placeholder="Username" autocomplete="off" />
+                        <input type="text" name="userName" id="userName" placeholder="Enter Username" autocomplete="off" />
                         <p class="error"></p>
                     </div>
                     <div class="inputWithError">
-                        <input type="text" name="userEmail" id="userEmail" placeholder="Email" autocomplete="off" />
+                        <input type="text" name="userEmail" id="userEmail" placeholder="Enter Email" autocomplete="off" />
                         <p class="error"></p>
                     </div>
                     <div class="inputWithError">
-                        <input type="text" name="userCreatePassword" id="userCreatePassword" placeholder="Create Password" autocomplete="off" />
+                        <input type="password" name="userCreatePassword" id="userCreatePassword" placeholder="Create Password" autocomplete="off" />
                         <p class="error"></p>
                     </div>
                     <div class="inputWithError">
-                        <input type="text" name="userConfirmPassword" id="userConfirmPassword" placeholder="Confirm Password" autocomplete="off" />
+                        <input type="password" name="userConfirmPassword" id="userConfirmPassword" placeholder="Confirm Password" autocomplete="off" />
                         <p class="error"></p>
                     </div>
 

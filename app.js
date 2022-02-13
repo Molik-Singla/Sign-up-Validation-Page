@@ -1,11 +1,22 @@
 // selecting all input fields and submit button
 const errors = document.querySelectorAll(".error");
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-const userCreatePassword = document.getElementById("userCreatePassword");
-const userConfirmPassword = document.getElementById("userConfirmPassword");
+const inputUserName = document.getElementById("userName");
+const inputUserEmail = document.getElementById("userEmail");
+const inputUserCreatePassword = document.getElementById("userCreatePassword");
+const inputUserConfirmPassword = document.getElementById("userConfirmPassword");
 const submitButton = document.getElementById("submitBtn");
 
+const popUpWindow = document.querySelector(".popUpForSuccessSubmit");
+const closeButton = document.querySelector(".closeBtn");
+
+closeButton.addEventListener("click", () => {
+    popUpWindow.classList.add("fade-out");
+
+    inputUserName.value = "";
+    inputUserEmail.value = "";
+    inputUserCreatePassword.value = "";
+    inputUserConfirmPassword.value = "";
+});
 // check if input is empty or not
 function validateEmptyInputs(inputPara) {
     return inputPara === "" ? false : true;
@@ -18,9 +29,9 @@ function validateName(namePara) {
         setError(0);
         return true;
     }
-    let unValidCharacter = "123456789@#$%(){}[]|~";
+    let unValidCharacter = "123456789@#$%(){}[]|~^";
 
-    for (let i = 0; i < namePara.length; i++) if (unValidCharacter.includes(namePara[i])) return false;
+    for (let iter = 0; iter < namePara.length; iter++) if (unValidCharacter.includes(namePara[iter])) return false;
     return true;
 }
 // check validity of Email
@@ -29,7 +40,22 @@ function validateEmail(emailPara) {
         setError(1);
         return true;
     }
-    return emailPara.includes("@gmail.com") ? true : false;
+    // email is valid if it starts with string , does not contain any special character rather than one @
+
+    if (!emailPara.includes("@gmail.com")) return false;
+    else {
+        let before = emailPara.split("@")[0].toLowerCase();
+        if (before.length === 0) return false;
+
+        let chars = "abcdefghijklmnopqrstuvwxyz";
+        let unValidChars = "#$@%^&*";
+        for (let char of before) if (unValidChars.includes(char)) return false;
+
+        for (let char of before)
+            if (!chars.includes(char)) return false;
+            else break;
+    }
+    return true;
 }
 // check validity of Create Password
 function validateCreatePassword(createPasswordPara) {
@@ -38,16 +64,14 @@ function validateCreatePassword(createPasswordPara) {
         return true;
     }
     let validNumber = "0123456789";
-    let validCharacters = "@#$&*";
+    let validCharacters = "@#$&*^~!";
 
     let presentNumber = false;
     let presentCharacter = false;
 
-    for (let i = 0; i < createPasswordPara.length; i++) {
-        if (!presentNumber && validNumber.includes(createPasswordPara[i])) presentNumber = true;
-
-        if (!presentCharacter && validCharacters.includes(createPasswordPara[i])) presentCharacter = true;
-
+    for (let iter = 0; iter < createPasswordPara.length; iter++) {
+        if (!presentNumber && validNumber.includes(createPasswordPara[iter])) presentNumber = true;
+        if (!presentCharacter && validCharacters.includes(createPasswordPara[iter])) presentCharacter = true;
         if (presentCharacter && presentNumber) return true;
     }
     return false;
@@ -58,11 +82,11 @@ function validateCreatePasswordLength(createPasswordPara) {
 }
 // check validity of Confirm Password
 function validateConfirmPassword() {
-    if (!validateEmptyInputs(userConfirmPassword.value)) {
+    if (!validateEmptyInputs(inputUserConfirmPassword.value)) {
         setError(3);
         return true;
     }
-    return userCreatePassword.value === userConfirmPassword.value ? true : false;
+    return inputUserCreatePassword.value === inputUserConfirmPassword.value ? true : false;
 }
 // Used to set errors with error messages ( default is for empty inputs )
 function setError(errorBlockIndex, errorMsg = "Please fill this field", displayProperty = "flex") {
@@ -71,17 +95,23 @@ function setError(errorBlockIndex, errorMsg = "Please fill this field", displayP
 }
 
 // focusout : When user loose focus from input then error message must be removed
-userName.addEventListener("focusin", setError.bind(this, 0, "", "none"));
-userEmail.addEventListener("focusin", setError.bind(this, 1, "", "none"));
-userCreatePassword.addEventListener("focusin", setError.bind(this, 2, "", "none"));
-userConfirmPassword.addEventListener("focusin", setError.bind(this, 3, "", "none"));
+inputUserName.addEventListener("focusin", setError.bind(this, 0, "", "none"));
+inputUserEmail.addEventListener("focusin", setError.bind(this, 1, "", "none"));
+inputUserCreatePassword.addEventListener("focusin", setError.bind(this, 2, "", "none"));
+inputUserConfirmPassword.addEventListener("focusin", setError.bind(this, 3, "", "none"));
 
 // on submit check all inputs validity
 submitButton.addEventListener("click", evt => {
     evt.preventDefault();
 
-    if (!validateName(userName.value)) setError(0, "Username should not contain numbers and special character");
-    if (!validateEmail(userEmail.value)) setError(1, "Email is not valid");
-    if (!validateCreatePassword(userCreatePassword.value)) setError(2, "Password must have atleast one number and special character");
+    if (!validateName(inputUserName.value)) setError(0, "inputUsername should not contain numbers and special character");
+    if (!validateEmail(inputUserEmail.value)) setError(1, "Email is not valid");
+    if (!validateCreatePassword(inputUserCreatePassword.value)) setError(2, "Password must have atleast one number and special character");
     if (!validateConfirmPassword()) setError(3, "Password does not matching");
+
+    // if 4 of the fields does not have any error that means all data is valid
+    let nonePropertyCount = 0;
+    for (let i = 0; i < errors.length; i++) if (window.getComputedStyle(errors[i]).display === "none") nonePropertyCount++;
+
+    if (nonePropertyCount === 4) popUpWindow.classList.add("swing-in-top-fwd");
 });
